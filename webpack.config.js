@@ -13,13 +13,20 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.scss$/i,
+				test: /\.scss$/,
 				use: [
-					// "style-loader",
 					MiniCssExtractPlugin.loader,
-					'css-loader',
+					{
+						loader: 'css-loader',
+						options: { esModule: false },
+					},
 					'sass-loader',
 				],
+			},
+
+			{
+				test: /\.css$/,
+				use: ['style-loader', 'css-loader'],
 			},
 			{
 				test: /\.(woff|woff2|eot|ttf|otf)$/i,
