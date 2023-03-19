@@ -24,28 +24,26 @@ refs.loader.classList.add('hidden')
 
 //functions
 function searchQuery(e) {
+	e.preventDefault()
 	clearGallery()
 	const value = refs.input.query.value
-	e.preventDefault()
 	refs.loader.classList.remove('hidden')
 	findImages(value, page)
 }
-function findImages(value, page) {
-	fetchImages(value, page)
-		.then(response => {
-			checkNumberOfHits(response.hits.length)
-			// response.hits.forEach(h => console.log(h.previewURL))
-			notifyResponse(response)
-			return response.hits
+async function findImages(value, page) {
+	try {
+		const response = await fetchImages(value, page)
+		checkNumberOfHits(response.hits.length)
+		notifyResponse(response)
+		const data = await response.hits
+		renderMarkup(data)
+		refs.loader.classList.add('hidden')
+		const lightbox = new SimpleLightbox('.photo-card a', {
+			captionDelay: 250,
 		})
-		.then(data => {
-			renderMarkup(data)
-			refs.loader.classList.add('hidden')
-			var lightbox = new SimpleLightbox('.photo-card a', {
-				captionsData: 'alt',
-				captionDelay: 250,
-			})
-		})
+	} catch (error) {
+		console.error(error)
+	}
 }
 function renderMarkup(markup) {
 	refs.gallery.insertAdjacentHTML('beforeend', galleryTpl(markup))
@@ -55,18 +53,13 @@ function notifyResponse(r) {
 		? Notify.failure('Oh no :( Nothing are found')
 		: Notify.success(`Yey we found ${r.totalHits} images for you query`)
 }
-function onLoadMore() {
+async function onLoadMore() {
 	const value = refs.input.query.value
 	page = page + 1
-	fetchImages(value, page)
-		.then(response => {
-			checkNumberOfHits(response.hits.length)
-
-			return response.hits
-		})
-		.then(data => {
-			renderMarkup(data)
-		})
+	const response = await fetchImages(value, page)
+	checkNumberOfHits(response.hits.length)
+	const data = await response.hits
+	renderMarkup(data)
 }
 function clearGallery() {
 	refs.gallery.innerHTML = ''
