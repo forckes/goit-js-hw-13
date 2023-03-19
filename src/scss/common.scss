@@ -187,6 +187,7 @@ body {
 	color: #fff;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	background: linear-gradient(320deg, rgb(0, 60, 255), rgb(10, 105, 194));
 	padding: 10px 15px;
 	border-radius: 15px;
@@ -194,6 +195,7 @@ body {
 	font-weight: 600;
 	transition: all 0.2s ease 0s;
 	margin: 0px 0px 15px 0px;
+	position: relative;
 	&:hover {
 		opacity: 0.8;
 		transform: scale(0.98);
@@ -202,25 +204,3 @@ body {
 .hidden {
 	display: none;
 }
-// .sl-wrapper {
-// 	z-index: 1040;
-// 	width: 100%;
-// 	height: 100%;
-// 	left: 0;
-// 	top: 0;
-// 	position: fixed;
-// 	& img {
-// 		display: block;
-// 		position: absolute;
-// 		top: 45%;
-// 		left: 45%;
-// 		transform: translate(-45%, -45%) scale(1);
-// 		opacity: 1;
-// 		transform: scale(2);
-// 		margin: 0;
-// 		padding: 0;
-// 		&:hover {
-// 			transform: scale(2);
-// 		}
-// 	}
-// }

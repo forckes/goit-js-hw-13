@@ -5,6 +5,7 @@ import galleryTpl from './templates/gallery.hbs'
 import './scss/tooltip.scss'
 import { Notify } from 'notiflix/build/notiflix-notify-aio'
 import SimpleLightbox from 'simplelightbox'
+import './scss/loader.scss'
 import 'simplelightbox/dist/simple-lightbox.min.css'
 
 //
@@ -13,39 +14,39 @@ const refs = {
 	input: document.querySelector('.search-form'),
 	gallery: document.querySelector('.gallery'),
 	btn: document.querySelector('.load-more'),
+	loader: document.querySelector('.loading'),
 }
 
 refs.input.addEventListener('submit', searchQuery)
 refs.btn.addEventListener('click', onLoadMore)
 refs.btn.classList.add('hidden')
+refs.loader.classList.add('hidden')
 
 //functions
 function searchQuery(e) {
 	clearGallery()
 	const value = refs.input.query.value
 	e.preventDefault()
+	refs.loader.classList.remove('hidden')
 	findImages(value, page)
-	console.log('wait..')
 }
 function findImages(value, page) {
 	fetchImages(value, page)
 		.then(response => {
 			checkNumberOfHits(response.hits.length)
-
-			response.hits.forEach(h => console.log(h.previewURL))
-
+			// response.hits.forEach(h => console.log(h.previewURL))
 			notifyResponse(response)
 			return response.hits
 		})
 		.then(data => {
 			renderMarkup(data)
+			refs.loader.classList.add('hidden')
 			var lightbox = new SimpleLightbox('.photo-card a', {
 				captionsData: 'alt',
 				captionDelay: 250,
 			})
 		})
 }
-
 function renderMarkup(markup) {
 	refs.gallery.insertAdjacentHTML('beforeend', galleryTpl(markup))
 }
@@ -60,6 +61,7 @@ function onLoadMore() {
 	fetchImages(value, page)
 		.then(response => {
 			checkNumberOfHits(response.hits.length)
+
 			return response.hits
 		})
 		.then(data => {
